@@ -1,0 +1,103 @@
+<project name="javafastcomplex" default="dist" basedir=".">
+    <description>
+      Java complex number package build file
+    </description>
+  <!-- set global properties for this build -->
+  <!-- we can't use location here since it appears not to work in include names -->
+  <property name="src" value="javasrc"/>
+  <property name="doc" value="javadoc"/>
+  <!--<property name="build" location="build"/>-->
+  <!--<property name="dist"  location="dist"/>-->
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <!-- <mkdir dir="${build}"/> -->
+    <mkdir dir="${doc}"/>
+  </target>
+
+  <patternset id="srcdoc">
+    <include name="${doc}/**/*"/>
+  </patternset>
+
+  <patternset id="src">
+    <include name="${src}/**/*.java"/>
+  </patternset>
+
+  <patternset id="build">
+    <include name="build.xml"/>
+  </patternset>
+
+  <target name="compile" depends="init" description="compile the source " >
+    <!-- Compile the java code from ${src} into ${build} -->
+    <!-- <javac srcdir="${src}" destdir="${build}"/> -->
+    <!-- <javac srcdir="." destdir="." /> -->
+    <javac srcdir="${src}" debug="on" source="1.5">
+      <!--<classpath refid="classpath"/>-->
+    </javac>
+  </target>
+
+  <target name="jar" depends="compile" description="jar">
+      <jar destfile="javafastcomplex.jar">
+          <fileset dir="${src}">
+              <!--<include name="**/*.class"/>-->
+              <include name="**/*.class"/>
+          </fileset>
+          <!--
+          <manifest>
+          </manifest>
+          -->
+      </jar>
+  </target>
+
+  <target name="javadoc" depends="compile" description="javadoc">
+      <javadoc packagenames="fi.iki.jmtilli.javafastcomplex.*" sourcepath="${src}" destdir="${doc}" />
+  </target>
+
+  <target name="bindist" depends="jar,javadoc" description="make distfile">
+      <zip destfile="javafastcomplex-bin.zip">
+          <zipfileset dir="." prefix="javafastcomplex-bin">
+              <patternset>
+                  <include name="javafastcomplex.jar" />
+              </patternset>
+              <patternset refid="srcdoc" />
+          </zipfileset>
+      </zip>
+  </target>
+
+  <target name="srcdist" depends="jar,javadoc" description="make distfile">
+      <zip destfile="javafastcomplex-src.zip">
+          <zipfileset dir="." prefix="javafastcomplex-src">
+              <patternset refid="src" />
+              <patternset refid="srcdoc" />
+              <patternset refid="build" />
+          </zipfileset>
+      </zip>
+  </target>
+
+  <target name="clean" description="clean up" >
+    <delete>
+        <fileset dir="${src}" includes="**/*.class"/>
+    </delete>
+    <delete dir="${doc}" />
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <!-- <delete dir="${build}"/> -->
+    <!-- <delete dir="${dist}"/> -->
+  </target>
+
+  <target name="dist" depends="srcdist,bindist" description="make distfiles" />
+
+  <target name="distclean" depends="clean" description="clean up distributions" >
+    <delete>
+        <fileset dir=".">
+            <include name="javafastcomplex-src.zip" />
+            <include name="javafastcomplex-bin.zip" />
+            <include name="javafastcomplex.jar" />
+        </fileset>
+    </delete>
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <!-- <delete dir="${build}"/> -->
+    <!-- <delete dir="${dist}"/> -->
+  </target>
+</project>
