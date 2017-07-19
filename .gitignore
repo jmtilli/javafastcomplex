@@ -1,0 +1,5 @@
+*.class
+/javadoc/
+/javafastcomplex-bin.zip
+/javafastcomplex-src.zip
+/javafastcomplex.jar
