@@ -21,58 +21,71 @@ package fi.iki.jmtilli.javafastcomplex;
   SOFTWARE.
  */
 /**
-   A common interface to complex numbers.
+   A common interface to complex number arrays.
  */
-public interface ComplexNumber {
+public interface ComplexNumberArray {
+  /**
+     Returns the size of the array.
+
+     @return The size
+   */
+  int size();
   /**
      Returns the real part of the complex number.
 
+     @param i The array index
      @return The real part
    */
-  double getReal();
+  double getReal(int i);
   /**
      Returns the imaginary part of the complex number.
 
+     @param i The array index
      @return The imaginary part
    */
-  double getImag();
+  double getImag(int i);
   /**
      Returns the absolute value of the complex number.
     
+     @param i The array index
      @return Double.NaN if isNaN()<br/>
              Double.POSITIVE_INFINITY if isInfinite()<br/>
              x&ge;0 absolute value otherwise
    */
-  double abs();
+  double abs(int i);
   /**
      Returns the argument of the complex number.
     
+     @param i The array index
      @return Double.NaN if isNaN()<br/>
              -pi&le;x&le;pi argument otherwise
    */
-  double arg();
+  double arg(int i);
   /**
      Checks whether the complex number is NaN.
     
+     @param i The array index
      @return true if either the real or imaginary part is NaN<br/>
              false otherwise
    */
-  boolean isNaN();
+  boolean isNaN(int i);
   /**
      Checks whether the complex number is infinite.
 
+     @param i The array index
      @return true if the real or imaginary part is infinite and !isNaN()<br/>
              false otherwise
    */
-  boolean isInfinite();
+  boolean isInfinite(int i);
   /**
      Returns a String representation of the complex number.
 
+     @param i The array index
      @return "NaN" if NaN<br/>
              re if purely real<br/>
              im + "i" if purely imaginary<br/>
              re " + " + im + "i" if imaginary part positive<br/>
              re " - " + (-im) + "i" if imaginary part negative<br/>
    */
-  String toString();
+  String toString(int i);
 };

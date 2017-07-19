@@ -1,7 +1,7 @@
 package fi.iki.jmtilli.javafastcomplex;
 import java.io.Serializable;
 /*
-  Copyright (C) 2013 Juha-Matti Tilli
+  Copyright (C) 2013-2017 Juha-Matti Tilli
   
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -70,6 +70,17 @@ public class Complex implements ComplexNumber, Serializable {
     this(num.getReal(), num.getImag());
   }
   /**
+     Create a complex number that has the same value as the specified other
+     complex number.
+
+     @param num The other complex number array
+     @param i Array index
+   */
+  public Complex(ComplexNumberArray num, int i)
+  {
+    this(num.getReal(i), num.getImag(i));
+  }
+  /**
      Create a complex number with zero imaginary part.
     
      @param re The real part
@@ -103,6 +114,21 @@ public class Complex implements ComplexNumber, Serializable {
   public static Complex valueOf(ComplexNumber num)
   {
     return Complex.valueOf(num.getReal(), num.getImag());
+  }
+  /**
+     Create a complex number that has the same value as the specified other
+     complex number. If a new Complex instance is not required, this
+     method should be used instead of the constructor Complex(ComplexNumber),
+     as this method results in better performance by caching frequently used
+     values.
+
+     @param num The other complex number array
+     @param i Array index
+     @return The new complex number
+   */
+  public static Complex valueOf(ComplexNumberArray num, int i)
+  {
+    return Complex.valueOf(num.getReal(i), num.getImag(i));
   }
   /**
      Create a complex number with zero imaginary part. If a new Complex instance
@@ -198,6 +224,18 @@ public class Complex implements ComplexNumber, Serializable {
     return ComplexUtils.add(this, c);
   }
   /**
+     Add another complex number to this complex number
+    
+     @param c The other complex number array
+     @param i The array index
+    
+     @return the sum
+   */
+  public Complex add(ComplexNumberArray c, int i)
+  {
+    return ComplexUtils.add(this, c, i);
+  }
+  /**
      Add a real number to this complex number
     
      @param d The real number
@@ -220,6 +258,18 @@ public class Complex implements ComplexNumber, Serializable {
     return ComplexUtils.subtract(this, c);
   }
   /**
+     Subtract another complex number from this complex number
+    
+     @param c The other complex number array
+     @param i The array index
+    
+     @return the difference
+   */
+  public Complex subtract(ComplexNumberArray c, int i)
+  {
+    return ComplexUtils.subtract(this, c, i);
+  }
+  /**
      Subtract this complex number from another complex number
     
      @param c The other complex number
@@ -229,6 +279,18 @@ public class Complex implements ComplexNumber, Serializable {
   public Complex subtractReversed(ComplexNumber c)
   {
     return ComplexUtils.subtract(c, this);
+  }
+  /**
+     Subtract this complex number from another complex number
+    
+     @param c The other complex number array
+     @param i The array index
+    
+     @return the difference
+   */
+  public Complex subtractReversed(ComplexNumberArray c, int i)
+  {
+    return ComplexUtils.subtract(c, i, this);
   }
   /**
      Subtract a real number from this complex number
@@ -264,6 +326,18 @@ public class Complex implements ComplexNumber, Serializable {
     return ComplexUtils.multiply(this, c);
   }
   /**
+     Multiply this complex number by another complex number
+    
+     @param c The complex number array multiplier
+     @param i The array index
+    
+     @return the product
+   */
+  public Complex multiply(ComplexNumberArray c, int i)
+  {
+    return ComplexUtils.multiply(this, c, i);
+  }
+  /**
      Multiply this complex number by a real number
     
      @param d The real number multiplier
@@ -297,6 +371,18 @@ public class Complex implements ComplexNumber, Serializable {
     return ComplexUtils.divide(this, c);
   }
   /**
+     Divide this complex number by another complex number
+    
+     @param c The complex number array divisor
+     @param i The array index
+    
+     @return the result of this division
+   */
+  public Complex divide(ComplexNumberArray c, int i)
+  {
+    return ComplexUtils.divide(this, c, i);
+  }
+  /**
      Divide this complex number by a real number
     
      @param d The real number divisor
@@ -317,6 +403,18 @@ public class Complex implements ComplexNumber, Serializable {
   public Complex divideReversed(ComplexNumber c)
   {
     return ComplexUtils.divide(c, this);
+  }
+  /**
+     Divide another complex number by this complex number
+    
+     @param c The complex number array dividend
+     @param i The array index
+    
+     @return the result of this division
+   */
+  public Complex divideReversed(ComplexNumberArray c, int i)
+  {
+    return ComplexUtils.divide(c, i, this);
   }
   /**
      Divide a real number by this complex number
@@ -511,6 +609,17 @@ public class Complex implements ComplexNumber, Serializable {
   public Complex pow(ComplexNumber c)
   {
     return ComplexUtils.pow(this, c);
+  }
+  /**
+     Raise this complex number to a complex power
+
+     @param c The complex array power
+     @param i The array index
+     @return The result
+   */
+  public Complex pow(ComplexNumberArray c, int i)
+  {
+    return ComplexUtils.pow(this, c, i);
   }
   /**
      Raise this complex number to a real power

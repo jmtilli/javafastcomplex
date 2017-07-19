@@ -24,340 +24,359 @@ import java.io.Serializable;
  */
 
 /**
-   A mutable complex number.
+   A mutable complex number array.
 
    An instance of this class refers to a complex number the value of
    which can be changed. This allows higher performance, as if the
    value of the number can be changed, not that many small objects
    need to be created.
  */
-public class ComplexBuffer implements ComplexNumber, Serializable {
-  private static final long serialVersionUID = -7100163843976716496L;
+public class ComplexBufferArray implements ComplexNumberArray, Serializable {
+  private static final long serialVersionUID = -8014038048264709473L;
   /**
      The real part.
      @serial
    */
-  private double re;
+  private double[] re;
   /**
      The imaginary part.
      @serial
    */
-  private double im;
+  private double[] im;
 
   /**
-     Create a complex buffer that initially stores the specified complex number.
+     Returns the size of the array.
 
-     @param num The specified complex number
+     @return The size
    */
-  public ComplexBuffer(ComplexNumber num)
+  public int size()
   {
-    this(num.getReal(), num.getImag());
+    return re.length;
   }
-  /**
-     Create a complex buffer that initially stores the specified complex number.
 
-     @param num The specified complex numberarray
-     @param j The array inex
-   */
-  public ComplexBuffer(ComplexNumberArray num, int j)
-  {
-    this(num.getReal(j), num.getImag(j));
-  }
   /**
-     Create a complex buffer that initially has zero real and imaginary parts.
-   */
-  public ComplexBuffer()
-  {
-    this(+0.0, +0.0);
-  }
-  /**
-     Create a complex buffer that initially the specified real part and zero as
-     the imaginary part.
+     Create a complex buffer array
 
-     @param re The initial real part
+     @param size The size of the array
    */
-  public ComplexBuffer(double re)
+  public ComplexBufferArray(int size)
   {
-    this(re, +0.0);
-  }
-  /**
-     Create a complex buffer that initially has the specified real and
-     imaginary parts
-
-     @param re The initial real part
-     @param im The initial imaginary part
-   */
-  public ComplexBuffer(double re, double im)
-  {
-    this.set(re, im);
+    this.re = new double[size];
+    this.im = new double[size];
   }
   /**
      Modify the real part of this complex buffer and set imaginary part to zero.
 
+     @param i The array index
      @param re The new real part
      @return this
    */
-  public ComplexBuffer set(double re)
+  public ComplexBufferArray set(int i, double re)
   {
-    this.re = re;
-    this.im = +0.0;
+    this.re[i] = re;
+    this.im[i] = +0.0;
     return this;
   }
   /**
      Modify the real and imaginary parts of this complex buffer
 
+     @param i The array index
      @param re The new real part
      @param im The new imaginary part
      @return this
    */
-  public ComplexBuffer set(double re, double im)
+  public ComplexBufferArray set(int i, double re, double im)
   {
-    this.re = re;
-    this.im = im;
+    this.re[i] = re;
+    this.im[i] = im;
     return this;
   }
+
+  /**
+     Returns the real part of the complex number.
+
+     @param i The array index
+     @return The real part
+   */
+  public double getReal(int i)
+  {
+    return this.re[i];
+  }
+  /**
+     Returns the imaginary part of the complex number.
+
+     @param i The array index
+     @return The imaginary part
+   */
+  public double getImag(int i)
+  {
+    return this.im[i];
+  }
+
+
+
   /**
      Modify the value of this complex buffer
 
+     @param i The array index
      @param num The new value
      @return this
    */
-  public ComplexBuffer set(ComplexNumber num)
+  public ComplexBufferArray set(int i, ComplexNumber num)
   {
-    return this.set(num.getReal(), num.getImag());
+    return this.set(i, num.getReal(), num.getImag());
   }
   /**
      Modify the value of this complex buffer
 
+     @param i The array index
      @param num The new value array
-     @param j The array index
+     @param j The array index to the other array
      @return this
    */
-  public ComplexBuffer set(ComplexNumberArray num, int j)
+  public ComplexBufferArray set(int i, ComplexNumberArray num, int j)
   {
-    return this.set(num.getReal(j), num.getImag(j));
+    return this.set(i, num.getReal(j), num.getImag(j));
   }
   /**
      Get the value of this complex buffer as an immutable object
 
+     @param i The array index
      @return A new immutable complex number that has the same value as this
              buffer
    */
-  public Complex get()
+  public Complex get(int i)
   {
-    return Complex.valueOf(this.getReal(), this.getImag());
+    return Complex.valueOf(this.getReal(i), this.getImag(i));
   }
   /**
      Add another complex number to this buffer and store the result in this
      buffer
 
+     @param i The array index
      @param c The other complex number
 
      @return this
    */
-  public ComplexBuffer addInPlace(ComplexNumber c)
+  public ComplexBufferArray addInPlace(int i, ComplexNumber c)
   {
-    return this.set(this.getReal() + c.getReal(), this.getImag() + c.getImag());
+    return this.set(i, this.getReal(i) + c.getReal(), this.getImag(i) + c.getImag());
   }
   /**
      Add another complex number to this buffer and store the result in this
      buffer
 
+     @param i The array index
      @param c The other complex number array
-     @param j The array index
+     @param j The array index to the other array
 
      @return this
    */
-  public ComplexBuffer addInPlace(ComplexNumberArray c, int j)
+  public ComplexBufferArray addInPlace(int i, ComplexNumberArray c, int j)
   {
-    return this.set(this.getReal() + c.getReal(j), this.getImag() + c.getImag(j));
+    return this.set(i, this.getReal(i) + c.getReal(j), this.getImag(i) + c.getImag(j));
   }
   /**
      Add a real number to this buffer and store the result in this buffer
 
+     @param i The array index
      @param d The real number
 
      @return this
    */
-  public ComplexBuffer addInPlace(double d)
+  public ComplexBufferArray addInPlace(int i, double d)
   {
-    return this.set(this.getReal() + d, this.getImag());
+    return this.set(i, this.getReal(i) + d, this.getImag(i));
   }
   /**
      Subtract another complex number from this buffer and store the result in
      this buffer
 
+     @param i The array index
      @param c The other complex number
 
      @return this
    */
-  public ComplexBuffer subtractInPlace(ComplexNumber c)
+  public ComplexBufferArray subtractInPlace(int i, ComplexNumber c)
   {
-    return this.set(this.getReal() - c.getReal(), this.getImag() - c.getImag());
+    return this.set(i, this.getReal(i) - c.getReal(), this.getImag(i) - c.getImag());
   }
   /**
      Subtract another complex number from this buffer and store the result in
      this buffer
 
+     @param i The array index
      @param c The other complex number array
-     @param j The array index
+     @param j The array index to the other array
 
      @return this
    */
-  public ComplexBuffer subtractInPlace(ComplexNumberArray c, int j)
+  public ComplexBufferArray subtractInPlace(int i, ComplexNumberArray c, int j)
   {
-    return this.set(this.getReal() - c.getReal(j), this.getImag() - c.getImag(j));
+    return this.set(i, this.getReal(i) - c.getReal(j), this.getImag(i) - c.getImag(j));
   }
   /**
      Subtract a real number from this buffer and store the result in
      this buffer
 
+     @param i The array index
      @param d The real number
 
      @return this
    */
-  public ComplexBuffer subtractInPlace(double d)
+  public ComplexBufferArray subtractInPlace(int i, double d)
   {
-    return this.set(this.getReal() - d, this.getImag());
+    return this.set(i, this.getReal(i) - d, this.getImag(i));
   }
   /**
      Subtract the value of this buffer from another complex number and store
      the result in this buffer
 
+     @param i The array index
      @param c The other complex number
 
      @return this
    */
-  public ComplexBuffer subtractReversedInPlace(ComplexNumber c)
+  public ComplexBufferArray subtractReversedInPlace(int i, ComplexNumber c)
   {
-    return this.set(c.getReal() - this.getReal(), c.getImag() - this.getImag());
+    return this.set(i, c.getReal() - this.getReal(i), c.getImag() - this.getImag(i));
   }
   /**
      Subtract the value of this buffer from another complex number and store
      the result in this buffer
 
+     @param i The array index
      @param c The other complex number array
-     @param j The array index
+     @param j The array index to the other array
 
      @return this
    */
-  public ComplexBuffer subtractReversedInPlace(ComplexNumberArray c, int j)
+  public ComplexBufferArray subtractReversedInPlace(int i, ComplexNumberArray c, int j)
   {
-    return this.set(c.getReal(j) - this.getReal(), c.getImag(j) - this.getImag());
+    return this.set(i, c.getReal(j) - this.getReal(i), c.getImag(j) - this.getImag(i));
   }
   /**
      Subtract the value of this buffer from a real number and store the result
      in this buffer
 
+     @param i The array index
      @param d The real number
 
      @return this
    */
-  public ComplexBuffer subtractReversedInPlace(double d)
+  public ComplexBufferArray subtractReversedInPlace(int i, double d)
   {
-    return this.set(d - this.getReal(), -this.getImag());
+    return this.set(i, d - this.getReal(i), -this.getImag(i));
   }
   /**
      Negate the value of this buffer and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer negateInPlace()
+  public ComplexBufferArray negateInPlace(int i)
   {
-    return this.set(-this.getReal(), -this.getImag());
+    return this.set(i, -this.getReal(i), -this.getImag(i));
   }
   /**
      Calculate the conjugate of the value of this buffer and store the
      result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer conjugateInPlace()
+  public ComplexBufferArray conjugateInPlace(int i)
   {
-    return this.set(this.getReal(), -this.getImag());
+    return this.set(i, this.getReal(i), -this.getImag(i));
   }
   /**
      Calculate the inverse of the value of this buffer and store the
      result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer invertInPlace()
+  public ComplexBufferArray invertInPlace(int i)
   {
-    return divideReversedInPlace(1.0);
+    return divideReversedInPlace(i, 1.0);
   }
   /**
      Calculate the square root of the value of this buffer and store the result
      in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer sqrtInPlace()
+  public ComplexBufferArray sqrtInPlace(int i)
   {
-    final double w = ComplexUtils.calcSqrtAuxiliaryNumber(this);
-    final double re = this.getReal();
-    final double im = this.getImag();
+    final double w = ComplexUtils.calcSqrtAuxiliaryNumber(this, i);
+    final double re = this.getReal(i);
+    final double im = this.getImag(i);
     if (w == 0.0)
     {
-      return this.set(+0.0, +0.0);
+      return this.set(i, +0.0, +0.0);
     }
     else if (re >= 0.0)
     {
-      return this.set(w, im/(2*w));
+      return this.set(i, w, im/(2*w));
     }
     else if (im >= 0.0)
     {
-      return this.set(Math.abs(im)/(2*w), w);
+      return this.set(i, Math.abs(im)/(2*w), w);
     }
     else
     {
-      return this.set(Math.abs(im)/(2*w), -w);
+      return this.set(i, Math.abs(im)/(2*w), -w);
     }
   }
   /**
      Calculate the exponential of the value of this buffer and store the result
      in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer expInPlace()
+  public ComplexBufferArray expInPlace(int i)
   {
-    final double m = Math.exp(this.getReal());
-    return this.set(m*Math.cos(this.getImag()), m*Math.sin(this.getImag()));
+    final double m = Math.exp(this.getReal(i));
+    return this.set(i, m*Math.cos(this.getImag(i)), m*Math.sin(this.getImag(i)));
   }
   /**
      Calculate the logarithm of the value of this buffer and store the result
      in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer logInPlace()
+  public ComplexBufferArray logInPlace(int i)
   {
-    return this.set(Math.log(this.abs()), this.arg());
+    return this.set(i, Math.log(this.abs(i)), this.arg(i));
   }
   /**
      Calculate the logarithm of 1 added to the value of this buffer and store
      the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer log1pInPlace()
+  public ComplexBufferArray log1pInPlace(int i)
   {
-    final double rho = this.abs();
-    final double re = this.getReal();
-    this.set(this.getReal() + 1, this.getImag());
+    final double rho = this.abs(i);
+    final double re = this.getReal(i);
+    this.set(i, this.getReal(i) + 1, this.getImag(i));
     if (rho > 0.375)
     {
-      return this.logInPlace();
+      return this.logInPlace(i);
     }
-    return this.set(0.5*Math.log1p(2*re + rho*rho), this.arg());
+    return this.set(i, 0.5*Math.log1p(2*re + rho*rho), this.arg(i));
   }
   /**
      Calculate exp(this)-1 and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer expm1InPlace()
+  public ComplexBufferArray expm1InPlace(int i)
   {
     /*
        expm1(z) = exp(x)*exp(i*y) - 1
@@ -365,20 +384,21 @@ public class ComplexBuffer implements ComplexNumber, Serializable {
                   - 2*sin(y/2)**2
                   + i*sin(y)*(1 + expm1(x))
      */
-    final double re = this.getReal();
-    final double im = this.getImag();
-    final double rho = this.abs();
+    final double re = this.getReal(i);
+    final double im = this.getImag(i);
+    final double rho = this.abs(i);
     double expm1_re;
     double two_mul_sin_im_div_2_sq;
     if (rho > 0.5)
     {
-      this.expInPlace();
-      return this.set(this.getReal() - 1, this.getImag());
+      this.expInPlace(i);
+      return this.set(i, this.getReal(i) - 1, this.getImag(i));
     }
     expm1_re = Math.expm1(re);
     two_mul_sin_im_div_2_sq = Math.sin(im/2);
     two_mul_sin_im_div_2_sq = two_mul_sin_im_div_2_sq * two_mul_sin_im_div_2_sq;
-    return this.set(  expm1_re * (1 - two_mul_sin_im_div_2_sq)
+    return this.set(i,
+                      expm1_re * (1 - two_mul_sin_im_div_2_sq)
                     - two_mul_sin_im_div_2_sq,
                     Math.sin(im)*(1 + expm1_re));
   }
@@ -386,432 +406,444 @@ public class ComplexBuffer implements ComplexNumber, Serializable {
      Calculate the inverse hyperbolic cosine of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer acoshInPlace()
+  public ComplexBufferArray acoshInPlace(int i)
   {
     // Could be optimized a lot, eg. multiplication with Complex.I
-    this.acosInPlace();
-    return this.multiplyInPlace(Complex.I);
+    this.acosInPlace(i);
+    return this.multiplyInPlace(i, Complex.I);
   }
   /**
      Calculate the inverse hyperbolic sine of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer asinhInPlace()
+  public ComplexBufferArray asinhInPlace(int i)
   {
     // Could be optimized a lot, eg. multiplication with Complex.I
-    this.multiplyInPlace(Complex.I);
-    this.asinInPlace();
-    this.multiplyInPlace(Complex.I);
-    return this.negateInPlace();
+    this.multiplyInPlace(i, Complex.I);
+    this.asinInPlace(i);
+    this.multiplyInPlace(i, Complex.I);
+    return this.negateInPlace(i);
   }
   /**
      Calculate the inverse hyperbolic tangent of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer atanhInPlace()
+  public ComplexBufferArray atanhInPlace(int i)
   {
     // Could be optimized a lot, eg. multiplication with Complex.I
-    this.multiplyInPlace(Complex.I);
-    this.atanInPlace();
-    this.multiplyInPlace(Complex.I);
-    return this.negateInPlace();
+    this.multiplyInPlace(i, Complex.I);
+    this.atanInPlace(i);
+    this.multiplyInPlace(i, Complex.I);
+    return this.negateInPlace(i);
   }
   /**
      Calculate the inverse cosine of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer acosInPlace()
+  public ComplexBufferArray acosInPlace(int i)
   {
     // Generates one object of garbage
     // Could be optimized a lot, eg. multiplication with Complex.I
-    final ComplexBuffer copy = new ComplexBuffer(this);
-    this.multiplyInPlace(this).subtractReversedInPlace(1.0).sqrtInPlace();
-    this.multiplyInPlace(Complex.I).addInPlace(copy);
-    this.logInPlace();
-    return this.multiplyInPlace(Complex.I).negateInPlace();
+    final ComplexBuffer copy = new ComplexBuffer(getReal(i), getImag(i));
+    this.multiplyInPlace(i, copy).subtractReversedInPlace(i, 1.0).sqrtInPlace(i);
+    this.multiplyInPlace(i, Complex.I).addInPlace(i, copy);
+    this.logInPlace(i);
+    return this.multiplyInPlace(i, Complex.I).negateInPlace(i);
   }
   /**
      Calculate the inverse sine of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer asinInPlace()
+  public ComplexBufferArray asinInPlace(int i)
   {
     // Generates one object of garbage
     // Could be optimized a lot, eg. multiplication with Complex.I
-    final ComplexBuffer copy = new ComplexBuffer(this);
-    this.multiplyInPlace(this).subtractReversedInPlace(1.0).sqrtInPlace();
-    this.addInPlace(copy.multiplyInPlace(Complex.I));
-    this.logInPlace();
-    return this.multiplyInPlace(Complex.I).negateInPlace();
+    final ComplexBuffer copy = new ComplexBuffer(getReal(i), getImag(i));
+    this.multiplyInPlace(i, copy).subtractReversedInPlace(i, 1.0).sqrtInPlace(i);
+    this.addInPlace(i, copy.multiplyInPlace(Complex.I));
+    this.logInPlace(i);
+    return this.multiplyInPlace(i, Complex.I).negateInPlace(i);
   }
   /**
      Calculate the inverse tangent of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer atanInPlace()
+  public ComplexBufferArray atanInPlace(int i)
   {
     // Generates one object of garbage
     // Could be optimized a lot, eg. mul/add/sub with Complex.I
-    final ComplexBuffer copy = new ComplexBuffer(this);
-    this.addInPlace(Complex.I);
-    this.divideInPlace(copy.subtractReversedInPlace(Complex.I));
-    this.logInPlace();
-    return this.multiplyInPlace(0.5).multiplyInPlace(Complex.I);
+    final ComplexBuffer copy = new ComplexBuffer(getReal(i), getImag(i));
+    this.addInPlace(i, Complex.I);
+    this.divideInPlace(i, copy.subtractReversedInPlace(Complex.I));
+    this.logInPlace(i);
+    return this.multiplyInPlace(i, 0.5).multiplyInPlace(i, Complex.I);
   }
   /**
      Calculate the cosine of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer cosInPlace()
+  public ComplexBufferArray cosInPlace(int i)
   {
-    return this.set( Math.cos(getReal()) * Math.cosh(getImag()),
-                    -Math.sin(getReal()) * Math.sinh(getImag()));
+    return this.set(i, Math.cos(getReal(i)) * Math.cosh(getImag(i)),
+                      -Math.sin(getReal(i)) * Math.sinh(getImag(i)));
   }
   /**
      Calculate the sine of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer sinInPlace()
+  public ComplexBufferArray sinInPlace(int i)
   {
-    return this.set(Math.sin(getReal()) * Math.cosh(getImag()),
-                    Math.cos(getReal()) * Math.sinh(getImag()));
+    return this.set(i, Math.sin(getReal(i)) * Math.cosh(getImag(i)),
+                       Math.cos(getReal(i)) * Math.sinh(getImag(i)));
   }
   /**
      Calculate the tangent of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer tanInPlace()
+  public ComplexBufferArray tanInPlace(int i)
   {
-    final double real_x2 = this.getReal() * 2;
-    final double imag_x2 = this.getImag() * 2;
+    final double real_x2 = this.getReal(i) * 2;
+    final double imag_x2 = this.getImag(i) * 2;
     final double d = Math.cos(real_x2) + Math.cosh(imag_x2);
-    return this.set(Math.sin(real_x2)/d, Math.sinh(imag_x2)/d);
+    return this.set(i, Math.sin(real_x2)/d, Math.sinh(imag_x2)/d);
   }
   /**
      Calculate the hyperbolic cosine of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer coshInPlace()
+  public ComplexBufferArray coshInPlace(int i)
   {
-    return this.set(Math.cosh(getReal()) * Math.cos(getImag()),
-                    Math.sinh(getReal()) * Math.sin(getImag()));
+    return this.set(i, Math.cosh(getReal(i)) * Math.cos(getImag(i)),
+                       Math.sinh(getReal(i)) * Math.sin(getImag(i)));
 
   }
   /**
      Calculate the hyperbolic sine of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer sinhInPlace()
+  public ComplexBufferArray sinhInPlace(int i)
   {
-    return this.set(Math.sinh(getReal()) * Math.cos(getImag()),
-                    Math.cosh(getReal()) * Math.sin(getImag()));
+    return this.set(i, Math.sinh(getReal(i)) * Math.cos(getImag(i)),
+                       Math.cosh(getReal(i)) * Math.sin(getImag(i)));
   }
   /**
      Calculate the hyperbolic tangent of the value of the buffer
      and store the result in this buffer
 
+     @param i The array index
      @return this
    */
-  public ComplexBuffer tanhInPlace()
+  public ComplexBufferArray tanhInPlace(int i)
   {
-    final double real_x2 = this.getReal() * 2;
-    final double imag_x2 = this.getImag() * 2;
+    final double real_x2 = this.getReal(i) * 2;
+    final double imag_x2 = this.getImag(i) * 2;
     final double d = Math.cosh(real_x2) + Math.cos(imag_x2);
-    return this.set(Math.sinh(real_x2)/d, Math.sin(imag_x2)/d);
+    return this.set(i, Math.sinh(real_x2)/d, Math.sin(imag_x2)/d);
   }
   /**
      Raise this complex number to a real power
      and store the result in this buffer
 
+     @param i The array index
      @param b The real power
 
      @return this
    */
-  public ComplexBuffer powInPlace(double b)
+  public ComplexBufferArray powInPlace(int i, double b)
   {
-    return this.logInPlace().multiplyInPlace(b).expInPlace();
+    return this.logInPlace(i).multiplyInPlace(i, b).expInPlace(i);
   }
   /**
      Raise this complex number to a complex power
      and store the result in this buffer
 
+     @param i The array index
      @param b The complex power
 
      @return this
    */
-  public ComplexBuffer powInPlace(ComplexNumber b)
+  public ComplexBufferArray powInPlace(int i, ComplexNumber b)
   {
     if (b == this)
     {
       b = new Complex(b); // freeze b to make it work if b == this
     }
-    return this.logInPlace().multiplyInPlace(b).expInPlace();
+    return this.logInPlace(i).multiplyInPlace(i, b).expInPlace(i);
   }
   /**
      Raise this complex number to a complex power
      and store the result in this buffer
 
+     @param i The array index
      @param b The complex power array
-     @param j The array index
+     @param j The array index to the other array
 
      @return this
    */
-  public ComplexBuffer powInPlace(ComplexNumberArray b, int j)
+  public ComplexBufferArray powInPlace(int i, ComplexNumberArray b, int j)
   {
-    return this.logInPlace().multiplyInPlace(b, j).expInPlace();
+    if (b == this && i == j)
+    {
+      Complex frozen = new Complex(b.getReal(j), b.getImag(j));
+      return this.logInPlace(i).multiplyInPlace(i, frozen).expInPlace(i);
+    }
+    return this.logInPlace(i).multiplyInPlace(i, b, j).expInPlace(i);
   }
   /**
      Multiply the value of this complex buffer by another complex number
      and store the result in this buffer
 
+     @param i The array index
      @param c The other complex number
 
      @return this
    */
-  public ComplexBuffer multiplyInPlace(ComplexNumber c)
+  public ComplexBufferArray multiplyInPlace(int i, ComplexNumber c)
   {
-    double this_re = this.getReal(), this_im = this.getImag();
+    double this_re = this.getReal(i), this_im = this.getImag(i);
     double that_re = c.getReal(), that_im = c.getImag();
-    return this.set(this_re*that_re - this_im*that_im,
-                    this_im*that_re + this_re*that_im);
+    return this.set(i, this_re*that_re - this_im*that_im,
+                       this_im*that_re + this_re*that_im);
   }
   /**
      Multiply the value of this complex buffer by another complex number
      and store the result in this buffer
 
+     @param i The array index
      @param c The other complex number array
-     @param j The array index
+     @param j The array index to the other array
 
      @return this
    */
-  public ComplexBuffer multiplyInPlace(ComplexNumberArray c, int j)
+  public ComplexBufferArray multiplyInPlace(int i, ComplexNumberArray c, int j)
   {
-    double this_re = this.getReal(), this_im = this.getImag();
+    double this_re = this.getReal(i), this_im = this.getImag(i);
     double that_re = c.getReal(j), that_im = c.getImag(j);
-    return this.set(this_re*that_re - this_im*that_im,
-                    this_im*that_re + this_re*that_im);
+    return this.set(i, this_re*that_re - this_im*that_im,
+                       this_im*that_re + this_re*that_im);
   }
   /**
      Multiply the value of this complex buffer by a real number
      and store the result in this buffer
 
+     @param i The array index
      @param d The real number
 
      @return this
    */
-  public ComplexBuffer multiplyInPlace(double d)
+  public ComplexBufferArray multiplyInPlace(int i, double d)
   {
-    return this.set(this.getReal() * d, this.getImag() * d);
+    return this.set(i, this.getReal(i) * d, this.getImag(i) * d);
   }
   /**
      Multiply the value of this complex buffer by an integer
      and store the result in this buffer
 
-     @param i The integer
+     @param i The array index
+     @param x The integer
 
      @return this
    */
-  public ComplexBuffer multiplyInPlace(int i)
+  public ComplexBufferArray multiplyInPlace(int i, int x)
   {
-    return this.set(this.getReal() * i, this.getImag() * i);
+    return this.set(i, this.getReal(i) * x, this.getImag(i) * x);
   }
   /**
      Divide the value of this complex buffer by another complex number
      and store the result in this buffer
 
+     @param i The array index
      @param c The other complex number
 
      @return this
    */
-  public ComplexBuffer divideInPlace(ComplexNumber c)
+  public ComplexBufferArray divideInPlace(int i, ComplexNumber c)
   {
-    final double this_re = this.getReal(), this_im = this.getImag();
+    final double this_re = this.getReal(i), this_im = this.getImag(i);
     final double c_re = c.getReal(), c_im = c.getImag();
     if (Math.abs(c_re) > Math.abs(c_im))
     {
       final double c_im_div_re = c_im/c_re;
       final double w = 1.0 / (c_re + c_im*c_im_div_re);
-      return this.set((this_re + this_im*c_im_div_re) * w,
-                      (this_im - this_re*c_im_div_re) * w);
+      return this.set(i, (this_re + this_im*c_im_div_re) * w,
+                         (this_im - this_re*c_im_div_re) * w);
     }
     else
     {
       final double c_re_div_im = c_re/c_im;
       final double w = 1.0 / (c_im + c_re*c_re_div_im);
-      return this.set((this_re*c_re_div_im + this_im) * w,
-                      (this_im*c_re_div_im - this_re) * w);
+      return this.set(i, (this_re*c_re_div_im + this_im) * w,
+                         (this_im*c_re_div_im - this_re) * w);
     }
   }
   /**
      Divide the value of this complex buffer by another complex number
      and store the result in this buffer
 
+     @param i The array index
      @param c The other complex number array
-     @param j The array index
+     @param j The array index to the other array
 
      @return this
    */
-  public ComplexBuffer divideInPlace(ComplexNumberArray c, int j)
+  public ComplexBufferArray divideInPlace(int i, ComplexNumberArray c, int j)
   {
-    final double this_re = this.getReal(), this_im = this.getImag();
+    final double this_re = this.getReal(i), this_im = this.getImag(i);
     final double c_re = c.getReal(j), c_im = c.getImag(j);
     if (Math.abs(c_re) > Math.abs(c_im))
     {
       final double c_im_div_re = c_im/c_re;
       final double w = 1.0 / (c_re + c_im*c_im_div_re);
-      return this.set((this_re + this_im*c_im_div_re) * w,
-                      (this_im - this_re*c_im_div_re) * w);
+      return this.set(i, (this_re + this_im*c_im_div_re) * w,
+                         (this_im - this_re*c_im_div_re) * w);
     }
     else
     {
       final double c_re_div_im = c_re/c_im;
       final double w = 1.0 / (c_im + c_re*c_re_div_im);
-      return this.set((this_re*c_re_div_im + this_im) * w,
-                      (this_im*c_re_div_im - this_re) * w);
+      return this.set(i, (this_re*c_re_div_im + this_im) * w,
+                         (this_im*c_re_div_im - this_re) * w);
     }
   }
   /**
      Divide the value of this complex buffer by a real number
      and store the result in this buffer
 
+     @param i The array index
      @param d The real number
 
      @return this
    */
-  public ComplexBuffer divideInPlace(double d)
+  public ComplexBufferArray divideInPlace(int i, double d)
   {
-    return this.set(this.getReal() / d, this.getImag() / d);
+    return this.set(i, this.getReal(i) / d, this.getImag(i) / d);
   }
   /**
      Divide another complex number by the value of this complex buffer
      and store the result in this buffer
 
+     @param i The array index
      @param c The other complex number
 
      @return this
    */
-  public ComplexBuffer divideReversedInPlace(ComplexNumber c)
+  public ComplexBufferArray divideReversedInPlace(int i, ComplexNumber c)
   {
     final double c_re = c.getReal(), c_im = c.getImag();
-    final double this_re = this.getReal(), this_im = this.getImag();
+    final double this_re = this.getReal(i), this_im = this.getImag(i);
     if (Math.abs(this_re) > Math.abs(this_im))
     {
       final double this_im_div_re = this_im/this_re;
       final double w = 1.0 / (this_re + this_im*this_im_div_re);
-      return this.set((c_re + c_im*this_im_div_re) * w,
-                      (c_im - c_re*this_im_div_re) * w);
+      return this.set(i, (c_re + c_im*this_im_div_re) * w,
+                         (c_im - c_re*this_im_div_re) * w);
     }
     else
     {
       final double this_re_div_im = this_re/this_im;
       final double w = 1.0 / (this_im + this_re*this_re_div_im);
-      return this.set((c_re*this_re_div_im + c_im) * w,
-                      (c_im*this_re_div_im - c_re) * w);
+      return this.set(i, (c_re*this_re_div_im + c_im) * w,
+                         (c_im*this_re_div_im - c_re) * w);
     }
   }
   /**
      Divide another complex number by the value of this complex buffer
      and store the result in this buffer
 
+     @param i The array index
      @param c The other complex number array
-     @param j The array index
+     @param j The array index to the other array
 
      @return this
    */
-  public ComplexBuffer divideReversedInPlace(ComplexNumberArray c, int j)
+  public ComplexBufferArray divideReversedInPlace(int i, ComplexNumberArray c, int j)
   {
     final double c_re = c.getReal(j), c_im = c.getImag(j);
-    final double this_re = this.getReal(), this_im = this.getImag();
+    final double this_re = this.getReal(i), this_im = this.getImag(i);
     if (Math.abs(this_re) > Math.abs(this_im))
     {
       final double this_im_div_re = this_im/this_re;
       final double w = 1.0 / (this_re + this_im*this_im_div_re);
-      return this.set((c_re + c_im*this_im_div_re) * w,
-                      (c_im - c_re*this_im_div_re) * w);
+      return this.set(i, (c_re + c_im*this_im_div_re) * w,
+                         (c_im - c_re*this_im_div_re) * w);
     }
     else
     {
       final double this_re_div_im = this_re/this_im;
       final double w = 1.0 / (this_im + this_re*this_re_div_im);
-      return this.set((c_re*this_re_div_im + c_im) * w,
-                      (c_im*this_re_div_im - c_re) * w);
+      return this.set(i, (c_re*this_re_div_im + c_im) * w,
+                         (c_im*this_re_div_im - c_re) * w);
     }
   }
   /**
      Divide a real number by the value of this complex buffer
      and store the result in this buffer
 
+     @param i The array index
      @param d The real number
 
      @return this
    */
-  public ComplexBuffer divideReversedInPlace(double d)
+  public ComplexBufferArray divideReversedInPlace(int i, double d)
   {
-    final double old_re = this.getReal();
-    final double old_im = this.getImag();
+    final double old_re = this.getReal(i);
+    final double old_im = this.getImag(i);
     if (Math.abs(old_re) > Math.abs(old_im))
     {
       final double im_div_re = old_im/old_re;
       final double w = d / (old_re + old_im*im_div_re);
-      return this.set(w, -im_div_re * w);
+      return this.set(i, w, -im_div_re * w);
     }
     else
     {
       final double re_div_im = old_re/old_im;
       final double w = d / (old_im + old_re*re_div_im);
-      return this.set(re_div_im * w, -w);
+      return this.set(i, re_div_im * w, -w);
     }
-  }
-
-  /**
-     Returns the real part of the complex number.
-
-     @return The real part
-   */
-  public double getReal()
-  {
-    return this.re;
-  }
-  /**
-     Returns the imaginary part of the complex number.
-
-     @return The imaginary part
-   */
-  public double getImag()
-  {
-    return this.im;
   }
 
   /**
      Calculate the absolute value of the complex number in this complex buffer.
 
+     @param i The array index
      @return x&ge;0 The absolute value
    */
-  public double abs()
+  public double abs(int i)
   {
-    return ComplexUtils.abs(this);
+    return ComplexUtils.abs(this, i);
   }
   /**
      Calculate the argument of the complex number in this complex buffer.
@@ -819,11 +851,12 @@ public class ComplexBuffer implements ComplexNumber, Serializable {
      The argument is the angle between the positive real axis and the point
      that represents this number in the complex plane.
 
+     @param i The array index
      @return -pi&le;x&le;pi The argument
    */
-  public double arg()
+  public double arg(int i)
   {
-    return ComplexUtils.arg(this);
+    return ComplexUtils.arg(this, i);
   }
   /**
      Check whether the complex number in this buffer is NaN (not-a-numer).
@@ -831,11 +864,12 @@ public class ComplexBuffer implements ComplexNumber, Serializable {
      A complex number is considered NaN if either the real or the imaginary
      part is NaN.
 
+     @param i The array index
      @return Whether the complex number in this buffer is NaN
    */
-  public boolean isNaN()
+  public boolean isNaN(int i)
   {
-    return ComplexUtils.isNaN(this);
+    return ComplexUtils.isNaN(this, i);
   }
   /**
      Check whether the complex number in this buffer is infinite.
@@ -845,25 +879,27 @@ public class ComplexBuffer implements ComplexNumber, Serializable {
      is NaN, the number is not considered infinite, so isNaN() and
      isInfinite() cannot be true at the same time.
 
+     @param i The array index
      @return Whether the complex number in this buffer is infinite
    */
-  public boolean isInfinite()
+  public boolean isInfinite(int i)
   {
-    return ComplexUtils.isInfinite(this);
+    return ComplexUtils.isInfinite(this, i);
   }
   /**
      Returns a String representation of the complex number in this complex
      buffer.
     
+     @param i The array index
      @return "NaN" if NaN<br/>
              re if purely real<br/>
              im + "i" if purely imaginary<br/>
              re " + " + im + "i" if imaginary part positive<br/>
              re " - " + (-im) + "i" if imaginary part negative
    */
-  public String toString()
+  public String toString(int i)
   {
-    return ComplexUtils.toString(this);
+    return ComplexUtils.toString(this, i);
   }
 
 };
